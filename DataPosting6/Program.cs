@@ -285,15 +285,25 @@ public class DataPortingApp : ConsoleAppBase
             // copy cell
             foreach (var definition in dic[type])
             {
-                string tmpString = sheetOrignal.Cell(definition.orignalCell).Value.ToString();
-                string replaceWord = config.Value.ReplaceWord;
-                string tmpString2 = "";
-                foreach (var word in replaceWord.Split(','))
+                switch (sheetOrignal.Cell(definition.orignalCell).DataType)
                 {
-                    tmpString2 = tmpString.Replace(word,"");
+                    case XLDataType.DateTime:
+                        DateTime tmpDateTime = sheetOrignal.Cell(definition.orignalCell).Value.GetDateTime();
+                        logger.ZLogTrace($"cell DateTime:{tmpDateTime}");
+                        portingSheet.Cell(definition.portingCell).SetValue(tmpDateTime.Date);
+                        break;
+                    default:
+                        string tmpString = sheetOrignal.Cell(definition.orignalCell).Value.ToString();
+                        string replaceWord = config.Value.ReplaceWord;
+                        string tmpString2 = "";
+                        foreach (var word in replaceWord.Split(','))
+                        {
+                            tmpString2 = tmpString.Replace(word,"");
+                        }
+                        logger.ZLogTrace($"cell {tmpString} --> {tmpString2}");
+                        portingSheet.Cell(definition.portingCell).SetValue(tmpString2.ToString());
+                        break;
                 }
-                logger.ZLogTrace($"cell {tmpString} --> {tmpString2}");
-                portingSheet.Cell(definition.portingCell).SetValue(tmpString2.ToString());
             }
 
             // DeviceNameToHostName
