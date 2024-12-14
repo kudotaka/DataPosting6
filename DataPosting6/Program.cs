@@ -94,7 +94,7 @@ public class DataPortingApp : ConsoleAppBase
         }
 
         string orignalTypeCell = config.Value.OrignalTypeCell;
-        string formatSheetName = config.Value.FormatSheetName;
+//        string formatSheetName = config.Value.FormatSheetName;
 
         readDefinition(dicMyDefinition);
         printDefinition(dicMyDefinition);
@@ -270,7 +270,7 @@ public class DataPortingApp : ConsoleAppBase
         foreach (IXLWorksheet? sheetOrignal in sheetsOrignalExcel)
         {
             IXLCell cellColumn = sheetOrignal.Cell(orignalTypeCell);
-            logger.ZLogDebug($"cell is Text type. value:{cellColumn.GetValue<string>()}");
+            logger.ZLogTrace($"cell is Text type. value:{cellColumn.GetValue<string>()}");
             var type = convertWordToType(cellColumn.GetValue<string>());
 /*
             switch (type)
@@ -287,7 +287,7 @@ public class DataPortingApp : ConsoleAppBase
 */
             foreach (IXLWorksheet? sheetFormat in xlWorkbookFormatExcel.Worksheets)
             {
-                    logger.ZLogDebug($"sheetFormat {sheetFormat.Name}");
+                    logger.ZLogTrace($"sheetFormat {sheetFormat.Name}");
             }
 
             // copy sheet
