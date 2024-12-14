@@ -206,6 +206,19 @@ public class DataPortingApp : ConsoleAppBase
                 }
             }
         }
+        // 特別なデバイス
+        AddSpecialDevice(dic);
+    }
+
+    private void AddSpecialDevice(Dictionary<string, MyCable> dic)
+    {
+        string cableSpecialDevice = config.Value.CableSpecialDevice;
+        string[] item = cableSpecialDevice.Split('|');
+        MyCable tmpCable = new MyCable();
+        tmpCable.rackName = item[0];
+        tmpCable.deviceNameAndNumber = item[1];
+        tmpCable.hostName = item[2];
+        dic.Add(tmpCable.deviceNameAndNumber, tmpCable);
     }
 
     private void printCable(Dictionary<string, MyCable> dic)
@@ -434,6 +447,7 @@ public class MyConfig
     public int CableDeviceNameColumn {get; set;} = 0;
     public int CableDeviceNumberColumn {get; set;} = 0;
     public int CableHostNameColumn {get; set;} = 0;
+    public string CableSpecialDevice {get; set;} = "";
     public string Target6UDeviceNameToHostName {get; set;} = "";
     public string Target14UDeviceNameToHostName {get; set;} = "";
     public string ReplaceWord {get; set;} = "";
