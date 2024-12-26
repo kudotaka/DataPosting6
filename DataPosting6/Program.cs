@@ -73,7 +73,7 @@ public class DataPortingApp : ConsoleAppBase
     }
 
 //    [Command("")]
-    public void Porting(string orignal, string format, string cable, string outpath)
+    public void Porting(string orignal, string format, string cable, string outpath, string updated)
     {
 //== start
         logger.ZLogInformation($"==== tool {getMyFileVersion()} ====");
@@ -92,6 +92,17 @@ public class DataPortingApp : ConsoleAppBase
             logger.ZLogError($"[NG] エクセルファイルが見つかりません{cable}");
             return;
         }
+        DateTime updatedDate;
+        try
+        {
+            updatedDate = DateTime.Parse(updated);
+//            logger.ZLogInformation($"updatedDate:{updatedDate.Date.ToString("yyyy/MM/dd")}");
+        }
+        catch (System.Exception)
+        {
+            logger.ZLogError($"[NG] updatedを日付に変換できません{updated}");
+            return;
+        }
 
         string orignalTypeCell = config.Value.OrignalTypeCell;
 //        string formatSheetName = config.Value.FormatSheetName;
@@ -102,7 +113,7 @@ public class DataPortingApp : ConsoleAppBase
         readCable(cable, dicMyCable);
         printCable(dicMyCable);
 
-        portingExcel(orignal, orignalTypeCell, format, outpath, dicMyDefinition);
+        portingExcel(orignal, orignalTypeCell, format, outpath, dicMyDefinition, updatedDate);
 
 
 //== finish
@@ -248,7 +259,7 @@ public class DataPortingApp : ConsoleAppBase
         return types.ToString();
     }
 
-    private void portingExcel(string excel, string orignalTypeCell, string format, string outpath, Dictionary<MyTypes, List<MyDefinition>> dic)
+    private void portingExcel(string excel, string orignalTypeCell, string format, string outpath, Dictionary<MyTypes, List<MyDefinition>> dic, DateTime updated)
     {
         logger.ZLogInformation($"== start portingExcel ==");
         bool isError = false;
@@ -343,6 +354,9 @@ public class DataPortingApp : ConsoleAppBase
                             logger.ZLogTrace($"DeviceNameToHostName Not ContainsKey {targetDeviceName}");
                         }
                     }
+                    // UpdateDate
+                    string updatedDateTime6UCell = config.Value.UpdatedDateTime6UCell;
+                    portingSheet.Cell(updatedDateTime6UCell).SetValue(updated.Date);
                     break;
                 case MyTypes.Type14U:
                     string target14UDeviceNameToHostName = config.Value.Target14UDeviceNameToHostName;
@@ -365,10 +379,16 @@ public class DataPortingApp : ConsoleAppBase
                             logger.ZLogTrace($"DeviceNameToHostName Not ContainsKey {targetDeviceName}");
                         }
                     }
+                    // UpdateDate
+                    string updatedDateTime14UCell = config.Value.UpdatedDateTime14UCell;
+                    portingSheet.Cell(updatedDateTime14UCell).SetValue(updated.Date);
                     break;                
                 default:
                     break;
             }
+
+            // PageBreakPreview
+            portingSheet.SheetView.View = XLSheetViewOptions.PageBreakPreview;
         }
 
         // detele formatSheet
@@ -451,6 +471,8 @@ public class MyConfig
     public string Target6UDeviceNameToHostName {get; set;} = "";
     public string Target14UDeviceNameToHostName {get; set;} = "";
     public string ReplaceWord {get; set;} = "";
+    public string UpdatedDateTime6UCell {get; set;} = "";
+    public string UpdatedDateTime14UCell {get; set;} = "";
 }
 
 public enum MyTypes
