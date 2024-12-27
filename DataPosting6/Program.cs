@@ -357,6 +357,16 @@ public class DataPortingApp : ConsoleAppBase
                     // UpdateDate
                     string updatedDateTime6UCell = config.Value.UpdatedDateTime6UCell;
                     portingSheet.Cell(updatedDateTime6UCell).SetValue(updated.Date);
+
+                    // NumberFormat
+                    string numberFormat6UCell = config.Value.NumberFormat6UCell;
+                    string[] cells6U = numberFormat6UCell.Split(',');
+                    foreach (var cell in cells6U)
+                    {
+                        var tmpDouble = portingSheet.Cell(cell).GetText();
+                        portingSheet.Cell(cell).SetValue(Double.Parse(tmpDouble));
+                        portingSheet.Cell(cell).Style.NumberFormat.NumberFormatId = (int)XLPredefinedFormat.General;
+                    }
                     break;
                 case MyTypes.Type14U:
                     string target14UDeviceNameToHostName = config.Value.Target14UDeviceNameToHostName;
@@ -382,6 +392,16 @@ public class DataPortingApp : ConsoleAppBase
                     // UpdateDate
                     string updatedDateTime14UCell = config.Value.UpdatedDateTime14UCell;
                     portingSheet.Cell(updatedDateTime14UCell).SetValue(updated.Date);
+
+                    // NumberFormat
+                    string numberFormat14UCell = config.Value.NumberFormat14UCell;
+                    string[] cells14U = numberFormat14UCell.Split(',');
+                    foreach (var cell in cells14U)
+                    {
+                        var tmpDouble = portingSheet.Cell(cell).GetText();
+                        portingSheet.Cell(cell).SetValue(Double.Parse(tmpDouble));
+                        portingSheet.Cell(cell).Style.NumberFormat.NumberFormatId = (int)XLPredefinedFormat.General;
+                    }
                     break;                
                 default:
                     break;
@@ -473,6 +493,8 @@ public class MyConfig
     public string ReplaceWord {get; set;} = "";
     public string UpdatedDateTime6UCell {get; set;} = "";
     public string UpdatedDateTime14UCell {get; set;} = "";
+    public string NumberFormat6UCell {get; set;} = "";
+    public string NumberFormat14UCell {get; set;} = "";
 }
 
 public enum MyTypes
